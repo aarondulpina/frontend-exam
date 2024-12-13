@@ -4,7 +4,7 @@ import { inputTypes, operateType, operatorInput } from "@/types/calculator";
 interface contextValue {
   input: number | null;
   display: number | string | null;
-  addInput: (input: string) => void | string;
+  addInput: (input: inputTypes) => void | string;
   clearInput: () => void;
 }
 
@@ -65,15 +65,13 @@ export const CalculatorProvider: React.FC<props> = ({ children }) => {
 
   const checkIfOperable = () => {
     if (input !== null && lastInput !== null && operation !== null) {
-      const newResult = Number(
-        calculateOperation({
-          operandA: lastInput,
-          operandB: input,
-          operator: operation,
-        })
-      );
-      if (!isNaN(newResult)) {
-        setLastInput(newResult);
+      const newResult = calculateOperation({
+        operandA: lastInput,
+        operandB: input,
+        operator: operation,
+      });
+      if (!isNaN(Number(newResult))) {
+        setLastInput(Number(newResult));
       }
       setDisplay(newResult);
     }
@@ -92,7 +90,7 @@ export const CalculatorProvider: React.FC<props> = ({ children }) => {
       case "*":
         return operandA * operandB;
       case "/":
-        return operandB == 0 ? "Cannot divide by zeron" : operandA / operandB;
+        return operandB === 0 ? "Cannot divide by zero" : operandA / operandB;
       default:
         return "Invalid Operation";
     }
