@@ -25,28 +25,37 @@ export const CalculatorProvider: React.FC<props> = ({ children }) => {
     try {
       const numericValue = Number(newInput);
       if (["+", "-", "/", "*"].includes(newInput)) {
-        setLastInput(Number(display));
         //if an operator
+        //always save the displayed value as the last value(an operand)
+        setLastInput(Number(display));
         setOperation(newInput);
         checkIfOperable();
         if (!isNaN(Number(display))) {
+          //clear the input to add condition that it will need a new number after pressing an operation
           setInput(null);
         }
       } else if (!isNaN(numericValue)) {
         //if a number
         if (input === null) {
+          //for the condition above
           setDisplay(numericValue);
           setInput(numericValue);
         } else {
+          //increment if new input
           const numericDisplay = Number(display + newInput);
           setDisplay(integer === null ? numericDisplay : display + newInput);
           setInput(numericDisplay);
         }
       } else if (newInput === "=") {
         checkIfOperable();
-      } else if (newInput === "." && integer === null) {
-        setInteger(Number(display));
-        setDisplay(Number(display) + ".");
+        //redo operation on every press
+      } else if (newInput === ".") {
+        //record the integer to add condition when incrementing fractional value
+        if (integer === null) {
+          setInteger(Number(display));
+          setDisplay(Number(display) + ".");
+        }
+        //do nothing if pressed multiple times
       } else {
         throw new Error();
       }
@@ -64,6 +73,7 @@ export const CalculatorProvider: React.FC<props> = ({ children }) => {
   };
 
   const checkIfOperable = () => {
+    //should calculate as long as all values are present
     if (input !== null && lastInput !== null && operation !== null) {
       const newResult = calculateOperation({
         operandA: lastInput,
