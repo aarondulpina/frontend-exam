@@ -60,6 +60,7 @@ export const CalculatorProvider: React.FC<props> = ({ children }) => {
         throw new Error();
       }
     } catch (error) {
+      console.trace(error);
       setDisplay("Invalid Input");
     }
   };
